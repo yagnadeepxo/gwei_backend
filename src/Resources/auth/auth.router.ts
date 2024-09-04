@@ -9,5 +9,7 @@ const authController = new AuthController();
 AuthRouter.post('/api/users/register', (req, res) => authController.registerUser(req, res));
 AuthRouter.post('/api/users/login', (req, res) => authController.loginUser(req, res));
 
+AuthRouter.post('/api/businesses/register', (req, res) => authController.registerBusiness(req, res));
+AuthRouter.post('/api/businesses/login', (req, res) => authController.loginBusiness(req, res));
 
 export default AuthRouter;

@@ -1,5 +1,6 @@
 import { Gig } from '../../models/gig';
 import { MongoClient, ObjectId } from 'mongodb';
+import 'dotenv/config'
 
 const url = process.env.MONGODB_URI;
 
@@ -32,4 +33,18 @@ export class GigService {
       throw error;
     }
   }
+
+  async getGigsByCompany(company: string) {
+    try {
+      const gigs = await gigsCollection.find({ company }).toArray();
+      if (gigs.length === 0) {
+        throw new Error('No gigs found for this company');
+      }
+      return gigs.map(gig => new Gig(gig));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
 }

@@ -31,4 +31,28 @@ export class AuthController {
       res.status(401).json({ message: 'Login failed', error: error.message });
     }
   }
+
+  async registerBusiness(req: Request, res: Response) {
+    try {
+      const businessData = req.body;
+      const businessId = await authService.registerBusiness(businessData);
+
+      res.status(201).json({ message: 'Business registered successfully', businessId });
+    } catch (error) {
+      res.status(500).json({ message: 'Error registering business', error: error.message });
+    }
+  }
+
+  // Controller method for logging in a business
+  async loginBusiness(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+
+      const { token, businessId } = await authService.loginBusiness(email, password);
+
+      res.status(200).json({ message: 'Login successful', token, businessId });
+    } catch (error) {
+      res.status(401).json({ message: 'Login failed', error: error.message });
+    }
+  }
 }

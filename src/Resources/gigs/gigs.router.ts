@@ -6,6 +6,7 @@ const gigController = new GigController();
 
 gigRouter.post('/api/gigs', gigController.createGig);
 gigRouter.get('/api/gigs', (req, res) => gigController.getGigs(req, res));
-gigRouter.get('/api/gigs/:id', (req, res) => gigController.getGigById(req, res));
+gigRouter.get('/api/getGigById/:id', (req, res) => gigController.getGigById(req, res));
+gigRouter.get('/api/gigs/:company', (req, res) => {gigController.getGigsByCompany(req, res)})
 
 export default gigRouter;

@@ -13,8 +13,10 @@ export class SubmissionController {
     try {
       const { link } = req.body;
       const { username, email } = (req as any).user;
+      const gigId = req.params.gigId;
 
       const submissionData: Submission = {
+        gigId,
         link,
         username,
         email

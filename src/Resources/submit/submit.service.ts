@@ -1,5 +1,6 @@
 import { Submission } from "../../models/submission";
 import { MongoClient, ObjectId } from 'mongodb';
+import 'dotenv/config'
 
 const url = process.env.MONGODB_URI
 const client = new MongoClient(url);
@@ -11,6 +12,7 @@ export class SubmissionService {
         try {
             const submission = {
                 _id: new ObjectId(),
+                gigId: submissionData.gigId,
                 link: submissionData.link,
                 username: submissionData.username,
                 email: submissionData.email,
