@@ -22,10 +22,10 @@ export class AuthController {
       const { email, password } = req.body;
 
       // Call the AuthService to handle login
-      const { token, userId } = await authService.loginUser(email, password);
+      const { user_token, userId } = await authService.loginUser(email, password);
 
       // Return the token and user ID upon successful login
-      res.status(200).json({ message: 'Login successful', token, userId });
+      res.status(200).json({ message: 'Login successful', user_token, userId });
     } catch (error) {
       // Return an error message if something goes wrong
       res.status(401).json({ message: 'Login failed', error: error.message });
@@ -48,9 +48,9 @@ export class AuthController {
     try {
       const { email, password } = req.body;
 
-      const { token, businessId } = await authService.loginBusiness(email, password);
+      const { business_token, businessId } = await authService.loginBusiness(email, password);
 
-      res.status(200).json({ message: 'Login successful', token, businessId });
+      res.status(200).json({ message: 'Login successful', business_token, businessId });
     } catch (error) {
       res.status(401).json({ message: 'Login failed', error: error.message });
     }

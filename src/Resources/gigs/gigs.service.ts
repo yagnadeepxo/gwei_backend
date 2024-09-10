@@ -40,11 +40,17 @@ export class GigService {
       if (gigs.length === 0) {
         throw new Error('No gigs found for this company');
       }
-      return gigs.map(gig => new Gig(gig));
+      return gigs.map(gig => {
+        return {
+          ...gig,
+          _id: gig._id.toString(), // Convert _id to string
+        };
+      });
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
+  
 
 }

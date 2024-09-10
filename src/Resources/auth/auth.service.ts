@@ -15,6 +15,12 @@ const businessCollection = db.collection('businesses');
 
 export class AuthService {
   async registerUser(userData: any) {
+    // Check if username already exists
+    const existingUser = await usersCollection.findOne({ username: userData.username });
+    if (existingUser) {
+      throw new Error('Username already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const user = new User({ ...userData, password: hashedPassword });
@@ -38,48 +44,52 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
-    const token = jwt.sign(
+    const user_token = jwt.sign(
       { userId: user._id, username: user.username, email: user.email },
-      process.env.JWT_SECRET || 'your_jwt_secret',
-      { expiresIn: '1h' }
+      process.env.JWT_SECRET || 'your_jwt_secret'
     );
-    return { token, userId: user._id };
+    return { user_token, userId: user._id };
   }
 
-    // Method to register a new business
-    async registerBusiness(businessData: any) {
-      const hashedPassword = await bcrypt.hash(businessData.password, 10);
-  
-      const business = new Business({ ...businessData, password: hashedPassword });
-  
-      const businessDocument = { ...business, _id: new ObjectId(), createdAt: new Date(), updatedAt: new Date() };
-      const result = await businessCollection.insertOne(businessDocument);
-  
-      return result.insertedId;
+  // Method to register a new business
+  async registerBusiness(businessData: any) {
+    // Check if business name already exists
+    const existingBusiness = await businessCollection.findOne({ name: businessData.name });
+    if (existingBusiness) {
+      throw new Error('Business name already exists');
     }
 
-    async loginBusiness(email: string, password: string) {
-      const business = await businessCollection.findOne({ email });
-  
-      if (!business) {
-        throw new Error('Business not found');
-      }
-  
-      const isPasswordValid = await bcrypt.compare(password, business.password);
-  
-      if (!isPasswordValid) {
-        throw new Error('Invalid credentials');
-      }
-  
-      const token = jwt.sign(
-        { businessId: business._id, name: business.name, email: business.email },
-        process.env.JWT_SECRET || 'your_jwt_secret',
-        { expiresIn: '1h' }
-      );
-      
-      return { token, businessId: business._id };
+    const hashedPassword = await bcrypt.hash(businessData.password, 10);
+
+    const business = new Business({ ...businessData, password: hashedPassword });
+
+    const businessDocument = { ...business, _id: new ObjectId(), createdAt: new Date(), updatedAt: new Date() };
+    const result = await businessCollection.insertOne(businessDocument);
+
+    return result.insertedId;
+  }
+
+  async loginBusiness(email: string, password: string) {
+    const business = await businessCollection.findOne({ email });
+
+    if (!business) {
+      throw new Error('Business not found');
     }
-  
+
+    const isPasswordValid = await bcrypt.compare(password, business.password);
+
+    if (!isPasswordValid) {
+      throw new Error('Invalid credentials');
+    }
+
+    const business_token = jwt.sign(
+      { businessId: business._id, name: business.name, email: business.email },
+      process.env.JWT_SECRET || 'your_jwt_secret',
+    );
+    
+    return { business_token, businessId: business._id };
+  }
+
 }
 
 export const extractUserFromToken = (req: Request, res: Response, next: NextFunction) => {
