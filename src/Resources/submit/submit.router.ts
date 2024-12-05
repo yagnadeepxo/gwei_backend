@@ -5,7 +5,9 @@ import { extractUserFromToken } from "../auth/auth.service";
 const submissionRouter = Router();
 const submissionController = new SubmissionController();
 
-submissionRouter.post('/api/submissions', extractUserFromToken, (req, res) => submissionController.createSubmission(req, res));
+submissionRouter.post('/api/:gigId/submissions', extractUserFromToken, (req, res) => submissionController.createSubmission(req, res));
 submissionRouter.get('/api/submissions', submissionController.getSubmissions);
+submissionRouter.get('/api/submissions/:gigId', submissionController.getSubmissionById);
+
 
 export default submissionRouter;
